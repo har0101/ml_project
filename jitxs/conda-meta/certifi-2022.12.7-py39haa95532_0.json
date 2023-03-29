@@ -156,7 +156,7 @@
     ],
     "paths_version": 1
   },
-  "requested_spec": "None",
+  "requested_spec": "certifi",
   "sha256": "89e2cf7fc4d1e3d90d565285d6ec673baeeb741ec35cbbf1ebb1d0aff21cdce6",
   "size": 152872,
   "subdir": "win-64",
