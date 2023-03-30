@@ -27,7 +27,7 @@ class DataIngestion:
         self.ingestion_config=DataIngestionconfig()
 
         # pass
-    def initiate_ingestion(self):
+    def initiate_ingestion(self,):
         logging.info("initiated data ingestion")
 
         try:
@@ -49,7 +49,7 @@ class DataIngestion:
 
 
             return(
-                self.ingestion_config.raw_data_path,
+                # self.ingestion_config.raw_data_path,
                 self.ingestion_config.train_data_path,
                 self.ingestion_config.test_data_path
             )
@@ -60,11 +60,11 @@ class DataIngestion:
 
 if __name__ == '__main__':
     obr = DataIngestion()
-    obr.initiate_ingestion()
+    train_data,test_data=obr.initiate_ingestion()
 
 
     data_transformation = DataTransformation()
-    data_transformation.initiate_data_transformation(train,test)
+    data_transformation.initiate_data_transformation(train_data,test_data)
 
 
 

@@ -1,12 +1,12 @@
 import sys
 from src.logger import logging
 from src.exception import CustomException
-# from src.components.data_ingestion import DataIngestion
-# from src.components.data_ingestion import DataIngestionconfig
+
 from src.utils import save_object
 import os
 import numpy as np
 import pandas as pd
+
 
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
@@ -28,13 +28,17 @@ class DataTransformation():
         this function does data transformation
         '''
         try:
-            df = pd.read_csv(self.ingestion_config.train_data_path)
-            numeric_column_df = df.select_dtypes(exclude='object')
-            numeric_column = numeric_column_df.columns
+            df = pd.read_csv('notebook/loan_sanction_train.csv')
+            
+            numeric_column_df_1 = df.drop(['Loan_Status','Loan_ID'],axis =1)
+            numeric_column_df_2 = numeric_column_df_1.select_dtypes(exclude='object')
+            numeric_column = numeric_column_df_2.columns
 
-            df = pd.read_csv(self.ingestion_config.train_data_path)
-            cat_column_df = df.select_dtypes(include='object')
-            cat_column = cat_column_df.columns
+            # df = pd.read_csv('notebook/loan_sanction_train.csv')
+
+            cat_column_df_1 = df.drop(['Loan_Status','Loan_ID'],axis =1)
+            cat_column_df_2 = cat_column_df_1.select_dtypes(include='object')
+            cat_column = cat_column_df_2.columns
 
             num_pipeline = Pipeline(
                 steps=[
@@ -62,8 +66,8 @@ class DataTransformation():
             
             )
             logging.info("combined both pipeline using ColumnTransformer")
-            return perprocessor
-        
+                
+            return(perprocessor)
         except Exception as e:
             raise CustomException(e,sys)
         
@@ -78,18 +82,20 @@ class DataTransformation():
             preprocessor_obj = self.perform_data_transform()
             logging.info("fecting data_transformation object")
 
-            target_column = ['Loan_Status']
+            target_column = 'Loan_Status'
 
             feature_train_df = train_df.drop([target_column],axis=1)
+            target_train_df = train_df[target_column]
+            feature_test_df = test_df.drop([target_column],axis=1)
             target_test_df = test_df[target_column]
 
             logging.info("applying preprocessing to feature and target")
 
             feature_train_arr = preprocessor_obj.fit_transform(feature_train_df)
-            target_test_arr = preprocessor_obj.transform(target_test_df)
+            feature_test_arr = preprocessor_obj.transform(feature_test_df)
 
-            train_arr = np.c_[feature_train_arr,np.array(feature_train_df)]
-            test_arr = np.c_[target_test_arr,np.array(target_test_df)]
+            train_arr = np.c_[feature_train_arr,np.array(target_train_df)]
+            test_arr = np.c_[feature_test_arr,np.array(target_test_df)]
 
             logging.info("preprocessor completed")
 
