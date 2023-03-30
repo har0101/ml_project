@@ -10,6 +10,10 @@ from dataclasses import dataclass
 
 
 
+from src.components.data_transformation import DataTransformationConfig 
+from src.components.data_transformation import DataTransformation
+
+
 
 @dataclass
 class DataIngestionconfig:
@@ -27,7 +31,7 @@ class DataIngestion:
         logging.info("initiated data ingestion")
 
         try:
-            df = pd.read_csv('notebook/raw_data.csv')
+            df = pd.read_csv('notebook/loan_sanction_train.csv')
             logging.info("data has been loaded")
 
             os.makedirs(os.path.dirname(self.ingestion_config.train_data_path),exist_ok=True)
@@ -57,5 +61,11 @@ class DataIngestion:
 if __name__ == '__main__':
     obr = DataIngestion()
     obr.initiate_ingestion()
+
+
+    data_transformation = DataTransformation()
+    data_transformation.initiate_data_transformation(train,test)
+
+
 
 
